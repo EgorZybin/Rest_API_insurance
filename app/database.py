@@ -21,9 +21,8 @@ async def init_db():
 
 
 async def load_initial_data():
-    # Создание сессии
     async with async_session() as db:
-        # Загрузка данных из JSON файла
+
         with open("app/rates.json") as f:
             rates = json.load(f)
 
@@ -31,14 +30,13 @@ async def load_initial_data():
         for date, rates_list in rates.items():
             for rate in rates_list:
                 insurance_rate = Rate(
-                    id=uuid.uuid4(),  # Set a unique id for each rate
+                    id=uuid.uuid4(),
                     cargo_type=rate['cargo_type'],
-                    rate=float(rate['rate']),  # Convert rate to float
-                    date=datetime.strptime(date, '%Y-%m-%d').date()  # Convert date to a valid date format
+                    rate=float(rate['rate']),
+                    date=datetime.strptime(date, '%Y-%m-%d').date()
                 )
                 db.add(insurance_rate)
 
-        # Сохранение изменений
         await db.commit()
 
 
